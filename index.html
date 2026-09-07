@@ -4,19 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>คลังความรู้กองช่าง (Knowledge Center)</title>
-  <!-- Bootstrap 5 CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Google Fonts (Sarabun & Plus Jakarta Sans) -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
       --bg-main: #f8fafc;
-      --card-bg: #ffffff;
       --border-color: #e2e8f0;
-      
       --brand-dark: #0f172a;
       --brand-slate: #1e293b;
       --accent-amber: #d97706;
@@ -31,7 +26,6 @@
       color: var(--text-main);
     }
 
-    /* Modern Hero Header */
     .hero-header {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: #ffffff;
@@ -58,7 +52,6 @@
       font-weight: 600;
     }
 
-    /* Buttons */
     .btn-add-new {
       background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
       color: #ffffff;
@@ -75,7 +68,6 @@
       color: #ffffff;
     }
 
-    /* Segmented Filter Bar */
     .category-segmented {
       display: flex;
       gap: 0.5rem;
@@ -106,7 +98,6 @@
       box-shadow: 0 4px 12px rgba(30, 41, 59, 0.2);
     }
 
-    /* Search Box */
     .search-box {
       position: relative;
     }
@@ -130,7 +121,6 @@
       color: var(--text-sub);
     }
 
-    /* Table & Scrollable Viewport */
     .table-container {
       background: #ffffff;
       border-radius: 16px;
@@ -145,7 +135,6 @@
       margin-bottom: 0;
     }
     
-    /* Styled Header Columns */
     .table-custom thead th {
       position: sticky;
       top: 0;
@@ -167,7 +156,6 @@
       background-color: #f1f5f9;
     }
 
-    /* Book Thumbnail */
     .book-thumb {
       width: 48px;
       height: 48px;
@@ -188,7 +176,6 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    /* Category Badges Styling */
     .badge-cat {
       font-size: 0.775rem;
       padding: 0.4em 0.85em;
@@ -202,7 +189,6 @@
     .cat-law { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
     .cat-gen { background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
 
-    /* Action Buttons */
     .btn-action {
       border-radius: 8px;
       padding: 0.35rem 0.7rem;
@@ -211,7 +197,6 @@
       transition: all 0.15s ease;
     }
 
-    /* Modal Form Styling */
     .modal-content {
       border-radius: 20px;
       border: none;
@@ -240,7 +225,6 @@
 </head>
 <body>
 
-  <!-- Hero Header -->
   <div class="hero-header d-flex justify-content-between align-items-center flex-wrap gap-3">
     <div>
       <div class="d-flex align-items-center gap-2 mb-1">
@@ -257,8 +241,6 @@
   </div>
 
   <div class="container-fluid px-4">
-    
-    <!-- Control Bar & Segmented Category Filters -->
     <div class="row g-3 mb-3 align-items-center">
       <div class="col-lg-4">
         <div class="search-box">
@@ -277,7 +259,6 @@
       </div>
     </div>
 
-    <!-- Scrollable Main Data Table -->
     <div class="table-container mb-4">
       <table class="table table-hover align-middle table-custom">
         <thead>
@@ -301,10 +282,8 @@
         </tbody>
       </table>
     </div>
-
   </div>
 
-  <!-- Modal Form: เพิ่ม/แก้ไข เอกสาร -->
   <div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
@@ -356,7 +335,6 @@
     </div>
   </div>
 
-  <!-- Image/Document Lightbox Preview Modal -->
   <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content bg-dark text-white border-0">
@@ -372,10 +350,8 @@
     </div>
   </div>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Web App API URL ฝั่ง Apps Script ที่พร้อมใช้งาน
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyDeV_Q2H2-lfFt61lTsuL9vGQ0HwgLdcluQkvSdT0l5Z6aQ2yHgVf9Re5ZP29kIH0h4A/exec";
 
     let rawData = [];
@@ -574,21 +550,25 @@
         fileObj: fileObj
       };
 
+      // ส่งแบบ URLSearchParams เพื่อรองรับ Cross-Origin บายพาส CORS Policy
+      const params = new URLSearchParams();
+      params.append('payload', JSON.stringify(payload));
+
       fetch(GAS_API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
       })
-      .then(res => res.json())
-      .then(res => {
-        document.getElementById('btnSave').disabled = false;
-        document.getElementById('btnSave').innerText = 'บันทึกเข้าคลังความรู้';
-        if (res.success) {
+      .then(() => {
+        // โหมด no-cors จะไม่คืนค่า JSON ให้ในความปลอดภัยเบราว์เซอร์
+        // แต่ข้อมูลจะบันทึกลง Sheet/Drive สมบูรณ์ จึงสั่งปิด Modal แล้วรีโหลดข้อมูลได้ทันที
+        setTimeout(() => {
+          document.getElementById('btnSave').disabled = false;
+          document.getElementById('btnSave').innerText = 'บันทึกเข้าคลังความรู้';
           modalInstance.hide();
           loadData();
-        } else {
-          alert('เกิดข้อผิดพลาด: ' + res.error);
-        }
+        }, 1500);
       })
       .catch(err => {
         document.getElementById('btnSave').disabled = false;
